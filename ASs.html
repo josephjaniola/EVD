@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Enrollment Form</title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#f8fafc; padding:20px; }
+    h2 { color:#1e40af; text-align:center; }
+    form { background:#fff; padding:20px; border-radius:8px; max-width:400px; margin:auto; box-shadow:0 2px 6px rgba(0,0,0,0.2); }
+    label { display:block; margin-top:12px; }
+    input, select { width:100%; padding:8px; margin-top:6px; border:1px solid #ccc; border-radius:6px; }
+    button { margin-top:15px; width:100%; padding:10px; border:none; border-radius:6px; background:#2563eb; color:white; font-size:16px; cursor:pointer; }
+    button:hover { background:#1d4ed8; }
+    #msg { margin-top:15px; text-align:center; font-weight:bold; }
+  </style>
+</head>
+<body>
+  <h2>Student Enrollment Form</h2>
+  <form id="enrollForm">
+    <label>Full Name</label>
+    <input type="text" name="name" required />
+
+    <label>ID Number</label>
+    <input type="text" name="idnum" required />
+
+    <label>Course</label>
+    <select name="course" id="course" required>
+      <option value="">-- Select Course --</option>
+      <option value="TM">Tourism Management (TM)</option>
+      <option value="HM">Hospitality Management (HM)</option>
+      <option value="IT">Information Technology (IT)</option>
+      <option value="Educ">Education (Educ)</option>
+    </select>
+
+    <label>Year</label>
+    <select name="year" required>
+      <option value="">-- Select Year --</option>
+      <option value="1st Year">1st Year</option>
+      <option value="2nd Year">2nd Year</option>
+      <option value="3rd Year">3rd Year</option>
+      <option value="4th Year">4th Year</option>
+    </select>
+
+    <label>Section</label>
+    <input type="text" name="section" required />
+
+    <button type="submit">Enroll Student</button>
+    <div id="msg"></div>
+  </form>
+
+  <script>
+
+    const scriptURL = "https://script.google.com/macros/s/AKfycbydQLxUV0GpXzScw8JzrLBda2ibCXHPmP1lkem94fiCFPyFUOsVEV_MLuOXj7N_QK3-/exec"; 
+    const form = document.getElementById("enrollForm");
+    const msg = document.getElementById("msg");
+
+    function validateCourse(course) {
+      if (course === "TM") {
+        msg.textContent = "You selected Tourism Management (TM).";
+        msg.style.color = "blue";
+        return true;
+      } else if (course === "HM") {
+        msg.textContent = "You selected Hospitality Management (HM).";
+        msg.style.color = "black";
+        return true;
+      } else if (course === "IT") {
+        msg.textContent = "Welcome future IT student!";
+        msg.style.color = "green";
+        return true;
+      } else if (course === "Educ") {
+        msg.textContent = "Good luck in Education!";
+        msg.style.color = "orange";
+        return true;
+      } else {
+        msg.textContent = "⚠️ Invalid course selected!";
+        msg.style.color = "red";
+        return false;
+      }
+    }
+
+ 
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+      const course = document.getElementById("course").value;
+
+ 
+      if (!validateCourse(course)) {
+        return; 
+      }
+
+   
+      const formData = new FormData(form);
+      const params = new URLSearchParams(formData).toString();
+
+      fetch(`${scriptURL}?${params}`)
+        .then(response => response.text())
+        .then(text => {
+          msg.textContent = text; 
+          msg.style.color = "green";
+          form.reset();
+        })
+        .catch(err => {
+          msg.textContent = "❌ Error enrolling student!";
+          msg.style.color = "red";
+        });
+    });
+  </script>
+</body>
+</html>
